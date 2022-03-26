@@ -60,3 +60,7 @@ cph.fit(df, duration_col = 'T', event_col = 'E')
 cph.print_summary()
 cph.plot()
 
+'''
+Interpretation: 
+    In the Cox proportional hazard model, all hazard ratio (exp(coef)) are over 1 meaning they are all associated with increased risk. A higher hazard ratio in var1 and var3 means that var1 and var3 are more associated with increased risk of the event occurring than var2. By looking at P values, var1 and var3 significantly increased risk while var2 has minor effect.
+'''
