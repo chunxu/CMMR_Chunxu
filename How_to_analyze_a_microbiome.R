@@ -205,4 +205,76 @@ cor.test(ibd_metadata$shannon, ibd_metadata$Fecal.Calprotectin, method=c("spearm
 fp.index=which(rownames(ibd_taxa)=="Faecalibacterium_prausnitzii")
 wilcox.test(t(ibd_taxa[fp.index,ibd_metadata$Diagnosis=="Control"]),t(ibd_taxa[fp.index,(ibd_metadata$Diagnosis=="CD" || ibd_metadata$Diagnosis=="UC")]))
 
+#further test to see which condition the proportion of Faecalibacterium tends to be higher:
+
+col1=rgb(0,1,0,0.5)
+col2=rgb(1,0,0,0.5)
+# determine maximum density
+maxy=max(hist(t(ibd_taxa[fp.index,]),breaks="FD",plot=FALSE)$density)
+# draw first histogram for control samples
+hist(t(ibd_taxa[fp.index,ibd_metadata$Diagnosis=="Control"]),breaks="FD", xlim=c(0,max(ibd_taxa[fp.index,])), ylim=c(0,maxy), prob=TRUE,col=col1, border=col1,xlab="Abundance", main="Histogram")
+# draw second histogram for IBD samples
+hist(t(ibd_taxa[fp.index,(ibd_metadata$Diagnosis=="CD" || ibd_metadata$Diagnosis=="UC")]),breaks="FD",prob=TRUE,col=col2, border=col2,add=TRUE)
+# add a legend
+legend("right",legend=c("Control","IBD"), lty = rep(1,2), col = c(col1,col2), merge = TRUE, bg = "white", text.col="black")
+
+#Calculating the Jaccard distance: the intersection of taxa divided by the union of taxa.
+# use Simulated data
+A <- rmultinom(5, size=100, prob=c(0.2, 0.4, 0.05, 0.02, 0.15, 0.13, 0.01, 0.04))
+B <- rmultinom(5, size=100, prob=c(0.6, 0.25, 0, 0.04, 0.02, 0.06, 0.02, 0))
+counts <- cbind(A, B)
+groups <- c(rep('A', 5), rep('B', 5))
+
+jaccard_sets <- function(a, b){
+  taxa <- as.character(c(1:length(a)))
+  aset <- taxa[a != 0]
+  bset <- taxa[b != 0]
+  return(1 - length(intersect(aset, bset))/length(union(aset, bset)))
+}
+jaccard_sets(counts[,1], counts[,10])
+
+#Calculating Bray-Curtis dissimilarities: take the absolute differences of species abundances across two samples and divide this by the total species abundances.
+samples <- cbind(counts[,1], counts[,10]) #take one sample in each group
+1 - (2 * sum(apply(samples,1,min)))/sum(samples)
+samples
+
+#UniFrac distance:  takes into account relatedness of species to calculate a distance
+# no code included
+counts[,] #just to show the samples in previous cell
+
+library(vegan)
+bray <- vegdist(t(norm_counts))
+pcoa.res.sim <- capscale(t(norm_counts)~1, distance='bray', na.action='na.omit')
+eigenvalues <- eigenvals(pcoa.res.sim)
+
+eigenvalues
+
+eigenvalues/sum(eigenvalues) #What percentage of variation is contained in the eigenvector?
+
+plot(pcoa.res.sim)
+
+#remove labels 
+plot(pcoa.res.sim$CA$u[,c(1,2)],
+     xlab=paste(c('PCoA1', round(eigenvalues[[1]],2))), ylab=paste(c('PCoA2', round(eigenvalues[[2]],2))))
+
+#Please specify the name of the parameter that takes the colvec vector and then colours the samples in the plot function.
+plot(pcoa.res.sim$CA$u[,c(1,2)],col = c(rep("#FF0000FF", 5), rep("#00FFFFFF", 5)), xlab=paste(c('PCoA1', round(eigenvalues[[1]],2))), ylab=paste(c('PCoA2', round(eigenvalues[[2]],2))))
+
+#visualize the 2nd axis as the x-axis and the 3rd axis as the y-axis
+plot(pcoa.res.sim$CA$u[,c(2,3)],col = c(rep("#FF0000FF", 5), rep("#00FFFFFF", 5)), xlab=paste(c('PCoA1', round(eigenvalues[[1]],2))), ylab=paste(c('PCoA2', round(eigenvalues[[2]],2))))
+
+#Non-metric multidimensional scaling 
+nmda.res.sim <- metaMDS(t(norm_counts), distance="bray", k=2, trymax=50)
+stressplot(nmda.res.sim)
+
+plot(nmda.res.sim)
+
+colvec = c(rep("#FF0000FF", 5), rep("#00FFFFFF", 5))
+ordiplot(nmda.res.sim,type="n")
+orditorp(nmda.res.sim, display="sites", col=colvec)
+points(nmda.res.sim, display="species", col='green')
+
+'''
+To be continued....
+'''
 
