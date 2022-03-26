@@ -46,3 +46,17 @@ corr = df.corr()
 plt.figure(figsize=(20,10))
 sns.heatmap(corr, annot=True, cmap='coolwarm')
 # all three variables are independent
+
+#generate survival curve
+from lifelines import KaplanMeierFitter
+kmf = KaplanMeierFitter()
+kmf.fit(durations = df['T'], event_observed = df['E'])
+kmf.plot_survival_function()
+
+# Cox Proportional Hazard Model to estimate risk factors
+from lifelines import CoxPHFitter
+cph = CoxPHFitter()
+cph.fit(df, duration_col = 'T', event_col = 'E')
+cph.print_summary()
+cph.plot()
+
