@@ -191,3 +191,18 @@ rarefaction(count.vector)
 #Quantitative metadata Diversity analysis
 plot(shannon~Age, data=ibd_metadata, ylab='Shannon')
 
+#correlation
+cor(ibd_metadata$shannon, ibd_metadata$Age, method=c("spearman"))
+cor.test(ibd_metadata$shannon, ibd_metadata$Age, method=c("spearman"))
+
+#correlation
+cor(ibd_metadata$shannon, ibd_metadata$Fecal.Calprotectin, method=c("spearman"))
+cor.test(ibd_metadata$shannon, ibd_metadata$Fecal.Calprotectin, method=c("spearman"))
+
+#Comparing species distributions
+
+#relative abundance of Faecalibacterium prausnitzii between IBD and control samples
+fp.index=which(rownames(ibd_taxa)=="Faecalibacterium_prausnitzii")
+wilcox.test(t(ibd_taxa[fp.index,ibd_metadata$Diagnosis=="Control"]),t(ibd_taxa[fp.index,(ibd_metadata$Diagnosis=="CD" || ibd_metadata$Diagnosis=="UC")]))
+
+
