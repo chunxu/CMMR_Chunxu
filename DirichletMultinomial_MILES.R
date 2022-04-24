@@ -1,4 +1,4 @@
-# This document illustrates the main features of the DirichletMultinomial package, and in the process replicates key tables and gures from [1].
+# Use reference to analyze MILES visit 1 data
 # [1] I. Holmes, K. Harris, and C. Quince. Dirichlet multinomial mixtures: Generative models for microbial metagenomics. PLoS ONE, 7(2):e30126, 02 2012.
 # 
 
