@@ -90,6 +90,7 @@ pdf("MILES_V1_heatmap1.pdf")
 heatmapdmn(count, fit[[1]], best, 30)
 dev.off()
 
+# further analysis based on metadata
 
 
 
