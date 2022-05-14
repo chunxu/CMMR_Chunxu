@@ -41,7 +41,7 @@ dev.off()
 if (full) {
   fit <- mclapply(1:7, dmn, count=count, verbose=TRUE)
   save(fit, file=file.path(tempdir(), "fit.rda"))
-} else data(fit)
+} else data(fit) # by default, it does not run but use the fit data. So need to set full to False
 fit[[4]]
 
 # min-laplace
