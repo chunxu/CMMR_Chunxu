@@ -1,4 +1,4 @@
-rbiom was developed by Dan at CMMR
+#rbiom was developed by Dan at CMMR
 #install.packages("rbiom")
 library(rbiom)
 
